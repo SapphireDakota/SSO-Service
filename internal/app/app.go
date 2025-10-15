@@ -1,12 +1,36 @@
 package app
 
 import (
-	"google.golang.org/grpc"
 	"log/slog"
+	grpcapp "sso/internal/app/grpc"
+	"sso/internal/services/auth"
+	"time"
 )
 
-type App struct {
-	log  *slog.Logger
-	gRPC *grpc.Server
-	port string
+type (
+	App struct {
+		GRPCServer *grpcapp.App
+	}
+)
+
+func NewApp(
+	log *slog.Logger,
+)
+
+func New(
+	log *slog.Logger,
+	grpcPort int64,
+	storagePath string,
+	tokenTTL time.Duration,
+) *App {
+	// TODO: инициализировать хранилище (storage)
+
+	// TODO: init auth service (auth)
+	authService := auth.New(log, nil, nil, nil, tokenTTL)
+
+	grpcApp := grpcapp.New(log, authService, grpcPort)
+
+	return &App{
+		GRPCServer: grpcApp,
+	}
 }
